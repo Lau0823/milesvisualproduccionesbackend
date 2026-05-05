@@ -1,5 +1,6 @@
 // src/servicios/dto/create-servicio.dto.ts
 import { IsString, IsNotEmpty, MinLength, MaxLength, IsNumber, Min, IsOptional, IsBoolean, IsUrl } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateServicioDto {
@@ -11,12 +12,20 @@ export class CreateServicioDto {
   nombre: string;
 
   @ApiProperty({ description: 'Precio base del servicio', example: 50000 })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') return parseFloat(value);
+    return value;
+  })
   @IsNumber({ maxDecimalPlaces: 2 }, { message: 'El precio base debe ser un número válido con hasta 2 decimales.' })
   @Min(0, { message: 'El precio base no puede ser negativo.' })
   precio_base: number;
 
   @ApiProperty({ description: 'Duración del servicio en minutos', example: 60, required: false })
   @IsOptional()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') return parseInt(value, 10);
+    return value;
+  })
   @IsNumber()
   @Min(1)
   duracion?: number;
@@ -43,11 +52,13 @@ export class CreateServicioDto {
 
   @ApiProperty({ description: 'Si el servicio está activo y visible', default: true, required: false })
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true || value === 1 || value === '1')
   @IsBoolean()
   activo?: boolean;
 
   @ApiProperty({ description: 'Si el servicio es destacado (Más elegido)', default: false, required: false })
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true || value === 1 || value === '1')
   @IsBoolean()
   destacado?: boolean;
 

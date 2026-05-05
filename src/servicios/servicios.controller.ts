@@ -54,19 +54,8 @@ export class ServiciosController {
       const result = await this.cloudinaryService.uploadVideo(files.video[0]);
       createServicioDto.video_url = result.secure_url;
     }
-    // Convertir tipos si vienen como string desde form-data
-    if (typeof createServicioDto.precio_base === 'string') {
-      createServicioDto.precio_base = parseFloat(createServicioDto.precio_base);
-    }
-    if (typeof createServicioDto.duracion === 'string') {
-      createServicioDto.duracion = parseInt(createServicioDto.duracion, 10);
-    }
-    if (typeof createServicioDto.activo === 'string') {
-      createServicioDto.activo = createServicioDto.activo === 'true';
-    }
-    if (typeof createServicioDto.destacado === 'string') {
-      createServicioDto.destacado = createServicioDto.destacado === 'true';
-    }
+    // La conversión de tipos ahora la maneja @Transform en el DTO.
+    // Todo se maneja vía @Transform
 
     // Default duration to 30 minutes if not provided or invalid
     if (!createServicioDto.duracion) {
@@ -139,19 +128,7 @@ export class ServiciosController {
       updateServicioDto.video_url = result.secure_url;
     }
 
-    // Convertir tipos si vienen como string desde form-data
-    if (updateServicioDto.precio_base && typeof updateServicioDto.precio_base === 'string') {
-      updateServicioDto.precio_base = parseFloat(updateServicioDto.precio_base);
-    }
-    if (updateServicioDto.duracion && typeof updateServicioDto.duracion === 'string') {
-      updateServicioDto.duracion = parseInt(updateServicioDto.duracion, 10);
-    }
-    if (updateServicioDto.activo !== undefined && typeof updateServicioDto.activo === 'string') {
-      updateServicioDto.activo = updateServicioDto.activo === 'true';
-    }
-    if (updateServicioDto.destacado !== undefined && typeof updateServicioDto.destacado === 'string') {
-      updateServicioDto.destacado = updateServicioDto.destacado === 'true';
-    }
+    // La conversión de tipos ahora la maneja @Transform en el DTO.
 
     return this.serviciosService.update(+id, updateServicioDto);
   }
