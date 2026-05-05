@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { AppController } from './app.controller';
 
 import { User } from './users/entities/user.entity';
 import { Cliente } from './clientes/entities/cliente.entity';
@@ -115,7 +116,7 @@ import { Setting } from './settings/entities/setting.entity';
     GoogleCalendarModule,
     SettingsModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule { }
