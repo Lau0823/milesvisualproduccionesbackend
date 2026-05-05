@@ -1,5 +1,4 @@
-// src/users/users.service.ts
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -8,11 +7,44 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
+  async onModuleInit() {
+    await this.seedAdmin();
+  }
+
+  async seedAdmin() {
+    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@milesvisual.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Admin123*';
+
+    const existingAdmin = await this.usersRepository.findOne({ where: { username: adminUsername } });
+    
+    if (!existingAdmin) {
+      console.log('🌱 Seeding default admin user...');
+      const salt = await bcrypt.genSalt();
+      const password_hash = await bcrypt.hash(adminPassword, salt);
+
+      const admin = this.usersRepository.create({
+        nombre: 'Administrador Miles Visual',
+        username: adminUsername,
+        email: adminEmail,
+        password_hash,
+        rol: 'admin',
+      });
+
+      await this.usersRepository.save(admin);
+      console.log(`✅ Admin user created: ${adminUsername}`);
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('ℹ️ Admin user already exists.');
+      }
+    }
+  }
 
   async create(createUserDto: CreateUserDto): Promise<Omit<User, 'password_hash'>> {
     const existingUser = await this.usersRepository.findOne({ where: { username: createUserDto.username } });
