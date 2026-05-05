@@ -2,13 +2,23 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Setting } from './entities/setting.entity';
+import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
 
 @Injectable()
 export class SettingsService {
   constructor(
     @InjectRepository(Setting)
     private readonly settingRepository: Repository<Setting>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
+
+  async uploadFile(key: string, file: Express.Multer.File) {
+    const isVideo = file.mimetype.includes('video');
+    const uploadResult = isVideo 
+      ? await this.cloudinaryService.uploadVideo(file)
+      : await this.cloudinaryService.uploadImage(file);
+    return await this.upsert(key, uploadResult.secure_url, `Archivo para ${key}`);
+  }
 
   async findAll() {
     return await this.settingRepository.find();

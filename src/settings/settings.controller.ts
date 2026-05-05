@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { SettingsService } from './settings.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 
 @ApiTags('Settings')
 @Controller('settings')
@@ -36,5 +37,17 @@ export class SettingsController {
   @ApiOperation({ summary: 'Actualiza un ajuste (Requiere Auth)' })
   upsert(@Body() body: { key: string; value: string; description?: string }) {
     return this.settingsService.upsert(body.key, body.value, body.description);
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Post('upload-image/:key')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Sube un archivo (imagen o video) para un ajuste específico (Requiere Auth)' })
+  uploadFile(
+    @Param('key') key: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.settingsService.uploadFile(key, file);
   }
 }
