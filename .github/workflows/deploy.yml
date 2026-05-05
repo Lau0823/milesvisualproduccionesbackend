@@ -19,4 +19,5 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            pm2 restart miles-back || pm2 start dist/main.js --name miles-back
+            # Zero Downtime: reload para evitar caídas en la API
+            pm2 reload miles-back --update-env || pm2 start dist/main.js --name miles-back
