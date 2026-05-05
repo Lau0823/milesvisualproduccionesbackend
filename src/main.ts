@@ -57,9 +57,12 @@ async function bootstrap() {
     }
   }
 
-  // Ejecutar Seeder
-  const seedService = app.get(SeedService);
-  await seedService.runSeed();
+  // Ejecutar Seeder solo en desarrollo, en producción se ejecuta manualmente
+  if (process.env.NODE_ENV !== 'production') {
+    const seedService = app.get(SeedService);
+    // Descomentar la siguiente línea si quieres que corra automáticamente en desarrollo
+    // await seedService.runSeed(); 
+  }
 
   const configService = app.get(ConfigService);
   const corsOrigin = configService.get<string>('CORS_ORIGIN');
