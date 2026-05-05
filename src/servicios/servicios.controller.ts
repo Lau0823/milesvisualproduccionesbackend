@@ -1,5 +1,5 @@
 // src/servicios/servicios.controller.ts
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseGuards, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseGuards, UseInterceptors, UploadedFiles, Header } from '@nestjs/common';
 import { FileInterceptor, FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ServiciosService } from './servicios.service';
 import { CreateServicioDto } from './dto/create-servicio.dto';
@@ -78,6 +78,7 @@ export class ServiciosController {
 
   @Public()
   @Get('catalogo')
+  @Header('Cache-Control', 'public, max-age=60, stale-while-revalidate=3600')
   @ApiOperation({ summary: 'Obtiene el catálogo de servicios activos (Público)' })
   @ApiResponse({ status: 200, description: 'Lista de servicios activos.' })
   findCatalogo() {

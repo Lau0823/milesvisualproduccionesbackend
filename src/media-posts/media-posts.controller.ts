@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Header } from '@nestjs/common';
 import { MediaPostsService } from './media-posts.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from '../auth/decorators/public.decorator';
@@ -22,6 +22,7 @@ export class MediaPostsController {
 
   @Public()
   @Get()
+  @Header('Cache-Control', 'public, max-age=60, stale-while-revalidate=3600')
   @ApiOperation({ summary: 'Obtiene todos los posts de media (Público)' })
   findAll() {
     return this.mediaPostsService.findAll();

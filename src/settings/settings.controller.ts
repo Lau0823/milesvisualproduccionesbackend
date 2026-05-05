@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, UseInterceptors, UploadedFile, Header } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SettingsService } from './settings.service';
 import { Public } from '../auth/decorators/public.decorator';
@@ -13,6 +13,7 @@ export class SettingsController {
 
   @Public()
   @Get()
+  @Header('Cache-Control', 'public, max-age=60, stale-while-revalidate=3600')
   @ApiOperation({ summary: 'Obtiene todos los ajustes del sitio (Público)' })
   findAll() {
     return this.settingsService.findAll();
