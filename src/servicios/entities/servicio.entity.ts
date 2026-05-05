@@ -31,6 +31,9 @@ export class Servicio {
   @Column({ type: 'varchar', length: 100, nullable: true })
   categoria: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  subtitulo: string;
+
   @Column({ type: 'boolean', default: true })
   activo: boolean;
 

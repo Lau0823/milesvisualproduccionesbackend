@@ -50,6 +50,11 @@ export class CreateServicioDto {
   @IsString()
   categoria?: string;
 
+  @ApiProperty({ description: 'Subtítulo del servicio (ej. Fotografía)', example: 'Fotografía', required: false })
+  @IsOptional()
+  @IsString()
+  subtitulo?: string;
+
   @ApiProperty({ description: 'Si el servicio está activo y visible', default: true, required: false })
   @IsOptional()
   @Transform(({ value }) => value === 'true' || value === true || value === 1 || value === '1')

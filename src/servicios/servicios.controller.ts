@@ -54,8 +54,13 @@ export class ServiciosController {
       const result = await this.cloudinaryService.uploadVideo(files.video[0]);
       createServicioDto.video_url = result.secure_url;
     }
-    // La conversión de tipos ahora la maneja @Transform en el DTO.
-    // Todo se maneja vía @Transform
+    // Forzar conversión de booleanos en la creación
+    if (createServicioDto.activo !== undefined) {
+      createServicioDto.activo = String(createServicioDto.activo) === 'true';
+    }
+    if (createServicioDto.destacado !== undefined) {
+      createServicioDto.destacado = String(createServicioDto.destacado) === 'true';
+    }
 
     // Default duration to 30 minutes if not provided or invalid
     if (!createServicioDto.duracion) {
@@ -128,7 +133,15 @@ export class ServiciosController {
       updateServicioDto.video_url = result.secure_url;
     }
 
-    // La conversión de tipos ahora la maneja @Transform en el DTO.
+    // Forzar conversión de booleanos si vienen como string (común en multipart/form-data)
+    if (updateServicioDto.activo !== undefined) {
+      updateServicioDto.activo = String(updateServicioDto.activo) === 'true';
+    }
+    if (updateServicioDto.destacado !== undefined) {
+      updateServicioDto.destacado = String(updateServicioDto.destacado) === 'true';
+    }
+
+    // La conversión de números ahora la maneja bien el DTO, pero los booleanos son más delicados en updates parciales.
 
     return this.serviciosService.update(+id, updateServicioDto);
   }

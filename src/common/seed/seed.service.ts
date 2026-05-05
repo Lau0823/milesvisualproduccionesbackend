@@ -26,7 +26,7 @@ export class SeedService {
     private readonly mediaPostRepository: Repository<MediaPost>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async runSeed() {
     this.logger.log('Iniciando Seeder...');
@@ -42,7 +42,7 @@ export class SeedService {
   private async seedUsers() {
     const adminEmail = 'admin@milesvisual.com';
     const existing = await this.userRepository.findOne({ where: { email: adminEmail } });
-    
+
     if (!existing) {
       const hashedPassword = await bcrypt.hash('admin123', 10);
       const admin = this.userRepository.create({
@@ -61,12 +61,12 @@ export class SeedService {
       // SEO
       { key: 'seo_title', value: 'Miles Visual | Fotografía Editorial', description: 'Título de la página' },
       { key: 'seo_description', value: 'Estudio de fotografía especializado en bodas, prebodas y fotografía editorial. Capturamos momentos eternos.', description: 'Meta descripción' },
-      
+
       // HERO
       { key: 'hero_title', value: 'FOTOS SOÑADAS', description: 'Título principal de la portada' },
       { key: 'hero_subtitle', value: 'HAGAMOS DE TUS', description: 'Subtítulo del Hero' },
       { key: 'hero_description', value: 'Fotografía y audiovisual con una mirada editorial, emocional y cinematográfica para parejas que quieren recuerdos que realmente se sientan.', description: 'Texto descriptivo del Hero' },
-      
+
       // BIENVENIDA
       { key: 'welcome_title', value: 'UNA EXPERIENCIA VISUAL QUE SE SIENTE', description: 'Título de bienvenida' },
       { key: 'welcome_text', value: 'Cada historia merece una estética cuidada, una dirección sensible y una experiencia que conecte desde el primer vistazo hasta la última entrega.', description: 'Texto de bienvenida' },
@@ -85,6 +85,15 @@ export class SeedService {
       { key: 'contact_email', value: 'hola@milesvisual.com', description: 'Email de contacto' },
       { key: 'contact_phone', value: '573000000000', description: 'WhatsApp' },
       { key: 'instagram_url', value: 'https://instagram.com/milesvisual', description: 'Instagram' },
+      { key: 'whatsapp_number', value: '573148112717', description: 'Número de WhatsApp para cotizaciones' },
+
+      // RECURSOS MULTIMEDIA (CLOUDINIARY)
+      { key: 'hero_video_url', value: 'https://res.cloudinary.com/dgfp5gcjr/video/upload/v1714290581/milesvisual/VIDEO_1_1_b0wg0m.mp4', description: 'Video principal del inicio' },
+      { key: 'middle_video_url', value: 'https://res.cloudinary.com/dgfp5gcjr/video/upload/v1714290582/milesvisual/VIDEO_2.mp4', description: 'Video intermedio de la página' },
+      { key: 'about_image_1', value: 'https://res.cloudinary.com/dgfp5gcjr/image/upload/v1714290580/milesvisual/about_1.jpg', description: 'Imagen superior de Acerca de Mí' },
+      { key: 'about_image_2', value: 'https://res.cloudinary.com/dgfp5gcjr/image/upload/v1714290580/milesvisual/about_2.jpg', description: 'Imagen inferior de Acerca de Mí' },
+      { key: 'about_title_top', value: '¿QUIÉNES', description: 'Título superior sección nosotros' },
+      { key: 'about_title_bottom', value: 'SOMOS?', description: 'Título inferior (script) sección nosotros' },
     ];
 
     for (const s of settings) {
@@ -97,10 +106,10 @@ export class SeedService {
 
   private async seedServicios() {
     const servicios = [
-      // BODAS (Planes Principales)
+      // BODAS
       {
         nombre: 'Basic', slug: 'bodas-basic', precio_base: 1500000, duracion: 600,
-        categoria: 'Fotografía', destacado: true, imagen_url: '/Bodas/8.jpeg',
+        categoria: 'BODAS', subtitulo: 'Fotografía', destacado: true, imagen_url: '/Bodas/8.jpeg',
         descripcion: JSON.stringify([
           "5 fotos impresas tamaño 15x20 cm",
           "Cubrimiento del evento en formato digital (aprox. 200 fotos)",
@@ -110,7 +119,7 @@ export class SeedService {
       },
       {
         nombre: 'Clasic', slug: 'bodas-clasic', precio_base: 1850000, duracion: 600,
-        categoria: 'Fotografía', destacado: true, imagen_url: 'https://i.pinimg.com/1200x/44/0a/be/440abe02ff2cff0f6fce3b0ed3a41e0a.jpg',
+        categoria: 'BODAS', subtitulo: 'Fotografía', destacado: true, imagen_url: 'https://i.pinimg.com/1200x/44/0a/be/440abe02ff2cff0f6fce3b0ed3a41e0a.jpg',
         descripcion: JSON.stringify([
           "10 fotos impresas tamaño 15x20 cm",
           "Photobook 30x30 cm (5 hojas con 30 fotos plasmadas)",
@@ -121,7 +130,7 @@ export class SeedService {
       },
       {
         nombre: 'Premium', slug: 'bodas-premium', precio_base: 2400000, duracion: 600,
-        categoria: 'Fotografía', destacado: true, imagen_url: 'https://i.pinimg.com/736x/d1/8e/e2/d18ee24424e28b9caa7a2b53313987f4.jpg',
+        categoria: 'BODAS', subtitulo: 'Fotografía', destacado: true, imagen_url: 'https://i.pinimg.com/736x/d1/8e/e2/d18ee24424e28b9caa7a2b53313987f4.jpg',
         descripcion: JSON.stringify([
           "15 fotos impresas tamaño 15x20 cm",
           "Photobook 30x30 cm (10 hojas con 70 fotos plasmadas)",
@@ -132,7 +141,7 @@ export class SeedService {
       },
       {
         nombre: 'Diamante', slug: 'bodas-diamante', precio_base: 2850000, duracion: 600,
-        categoria: 'Foto + Video', destacado: true, imagen_url: 'https://i.pinimg.com/736x/f7/c7/4b/f7c74bbf0fc3ffc1fe7b318f4a3140a8.jpg',
+        categoria: 'BODAS', subtitulo: 'Foto + Video', destacado: true, imagen_url: 'https://i.pinimg.com/736x/f7/c7/4b/f7c74bbf0fc3ffc1fe7b318f4a3140a8.jpg',
         video_url: 'VIDEO 5.mp4',
         descripcion: JSON.stringify([
           "Pre boda",
@@ -145,7 +154,7 @@ export class SeedService {
       },
       {
         nombre: 'Gold', slug: 'bodas-gold', precio_base: 3600000, duracion: 600,
-        categoria: 'Experiencia completa', destacado: true, imagen_url: 'https://i.pinimg.com/1200x/5f/c7/4a/5fc74aa29aba24b0b0d348c52b19f4e6.jpg',
+        categoria: 'BODAS', subtitulo: 'Experiencia completa', destacado: true, imagen_url: 'https://i.pinimg.com/1200x/5f/c7/4a/5fc74aa29aba24b0b0d348c52b19f4e6.jpg',
         descripcion: JSON.stringify([
           "Pre boda",
           "15 fotos impresas tamaño 15x20 cm",
@@ -159,44 +168,34 @@ export class SeedService {
       // PRE-BODAS
       {
         nombre: 'Basic', slug: 'prebodas-basic', precio_base: 1500000, duracion: 600,
-        descripcion: '5 fotos impresas tamaño 15x20 cm. Cubrimiento del evento en formato digital (aprox. 200 fotos). USB con el material del evento. Protocolo, decoración, recepción, maquillaje y hora loca',
-        categoria: 'Pre-bodas', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.08 PM.jpeg',
+        categoria: 'PREBODAS', subtitulo: 'Sesión íntima', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.08 PM.jpeg',
+        descripcion: JSON.stringify([
+          "5 fotos impresas tamaño 15x20 cm",
+          "Cubrimiento del evento en formato digital",
+          "USB con el material del evento",
+          "Protocolo, decoración, recepción"
+        ])
       },
       {
         nombre: 'Clasic', slug: 'prebodas-clasic', precio_base: 1850000, duracion: 600,
-        descripcion: '10 fotos impresas tamaño 15x20 cm. Photobook 30x30 cm. Cubrimiento en formato digital. USB con material del evento. Decoración, recepción, maquillaje y hora loca',
-        categoria: 'Pre-bodas', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.09 PM (1).jpeg',
-      },
-      {
-        nombre: 'Premium', slug: 'prebodas-premium', precio_base: 2400000, duracion: 600,
-        descripcion: '15 fotos impresas tamaño 15x20 cm. Photobook 30x30 cm premium. Más de 400 fotografías editadas. USB con el material completo',
-        categoria: 'Pre-bodas', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.09 PM (2).jpeg',
-      },
-      {
-        nombre: 'Diamante', slug: 'prebodas-diamante', precio_base: 2850000, duracion: 600,
-        descripcion: 'Pre boda. 20 fotos impresas tamaño 15x20 cm. Photobook premium. Cubrimiento digital. USB con material completo. Video clip',
-        categoria: 'Pre-bodas', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.09 PM (3).jpeg',
-      },
-      {
-        nombre: 'Gold', slug: 'prebodas-gold', precio_base: 3600000, duracion: 600,
-        descripcion: 'Pre boda. 15 fotos impresas. Photobook 15x20 y 30x30. USB con todo el material. Tomas de dron. Video principal',
-        categoria: 'Pre-bodas', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.10 PM (2).jpeg',
+        categoria: 'PREBODAS', subtitulo: 'Clásico', destacado: true, imagen_url: '/prebodas/WhatsApp Image 2026-04-08 at 5.01.09 PM (1).jpeg',
+        descripcion: JSON.stringify([
+          "10 fotos impresas tamaño 15x20 cm",
+          "Photobook 30x30 cm",
+          "USB con material del evento",
+          "Maquillaje y hora loca"
+        ])
       },
       // ESTUDIO
       {
         nombre: 'Editorial', slug: 'estudio-editorial', precio_base: 850000, duracion: 120,
-        descripcion: 'Sesión en estudio con dirección visual. Selección de fotos editadas en alta calidad. Concepto estético definido. Entrega digital curada',
-        categoria: 'Foto Estudio', destacado: true, imagen_url: '/estudio/DSC00984.jpg.jpeg',
-      },
-      {
-        nombre: 'Portrait', slug: 'estudio-portrait', precio_base: 1100000, duracion: 120,
-        descripcion: 'Retratos editoriales. Imágenes para redes y perfil profesional. Dirección de pose. Entrega digital premium',
-        categoria: 'Foto Estudio', destacado: true, imagen_url: '/estudio/DSC09548.jpg (1).jpeg',
-      },
-      {
-        nombre: 'Influencer', slug: 'estudio-influencer', precio_base: 1400000, duracion: 240,
-        descripcion: 'Sesión para contenido de marca personal. Variedad de encuadres y estilos. Selección final curada. Entrega optimizada para digital',
-        categoria: 'Foto Estudio', destacado: true, imagen_url: '/estudio/WhatsApp Image 2026-04-13 at 12.24.20 PM (2).jpeg',
+        categoria: 'ESTUDIO', subtitulo: 'Foto Estudio', destacado: true, imagen_url: '/estudio/DSC00984.jpg.jpeg',
+        descripcion: JSON.stringify([
+          "Sesión en estudio con dirección visual",
+          "Selección de fotos editadas en alta calidad",
+          "Concepto estético definido",
+          "Entrega digital curada"
+        ])
       }
     ];
 
@@ -205,7 +204,7 @@ export class SeedService {
       if (existing) {
         await this.servicioRepository.update(existing.id, s);
       } else {
-        await this.servicioRepository.save(s);
+        await this.servicioRepository.save(this.servicioRepository.create(s));
       }
     }
   }
