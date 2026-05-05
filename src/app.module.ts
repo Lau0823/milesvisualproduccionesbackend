@@ -79,8 +79,8 @@ import { Setting } from './settings/entities/setting.entity';
             url: databaseUrl,
             entities: entities,
             autoLoadEntities: true,
-            synchronize: !isProduction,
-            migrationsRun: isProduction,
+            synchronize: true, // Forzamos true para asegurar que las tablas se creen en el VPS
+            migrationsRun: false,
           };
         }
 
@@ -94,8 +94,8 @@ import { Setting } from './settings/entities/setting.entity';
           database: config.get<string>('DB_NAME'),
           entities: entities,
           autoLoadEntities: true,
-          synchronize: !isProduction,
-          migrationsRun: isProduction,
+          synchronize: true, // Forzamos true para desarrollo y despliegue inicial
+          migrationsRun: false,
         };
       },
     }),
