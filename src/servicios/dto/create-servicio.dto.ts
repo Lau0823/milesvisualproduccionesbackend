@@ -50,4 +50,14 @@ export class CreateServicioDto {
   @IsOptional()
   @IsBoolean()
   destacado?: boolean;
+
+  @IsOptional()
+  @IsString()
+  slug?: string;
+
+  @IsOptional()
+  created_at?: any;
+
+  @IsOptional()
+  updated_at?: any;
 }
