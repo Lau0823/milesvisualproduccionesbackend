@@ -148,6 +148,9 @@ export class ServiciosController {
     if (updateServicioDto.activo !== undefined && typeof updateServicioDto.activo === 'string') {
       updateServicioDto.activo = updateServicioDto.activo === 'true';
     }
+    if (updateServicioDto.destacado !== undefined && typeof updateServicioDto.destacado === 'string') {
+      updateServicioDto.destacado = updateServicioDto.destacado === 'true';
+    }
 
     return this.serviciosService.update(+id, updateServicioDto);
   }
