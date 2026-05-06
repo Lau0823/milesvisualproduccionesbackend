@@ -94,8 +94,11 @@ export class ServiciosService {
       }
     }
 
-    Object.assign(servicio, updateServicioDto);
-    return this.serviciosRepository.save(servicio);
+    // Usamos update directo para evitar problemas de tipos con save()
+    await this.serviciosRepository.update(id, updateServicioDto);
+    
+    // Devolvemos el objeto actualizado
+    return this.findOne(id);
   }
 
   /**
