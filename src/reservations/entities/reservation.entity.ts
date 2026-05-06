@@ -44,6 +44,15 @@ export class Reservation {
     @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
     anticipo: number;
 
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    devolucion: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    gastos_operativos: number;
+
+    @Column({ type: 'text', nullable: true })
+    notas_admin: string;
+
     @Column({ type: 'enum', enum: ReservationStatus, default: ReservationStatus.PENDING })
     status: ReservationStatus;
 
