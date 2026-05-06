@@ -8,6 +8,7 @@ export enum ReservationStatus {
 
 export enum PaymentStatus {
     PENDING = 'pending',
+    PARTIAL = 'partial',
     PAID = 'paid',
 }
 
@@ -29,16 +30,19 @@ export class Reservation {
     serviceType: string;
 
     @Column({ type: 'date', nullable: true })
-    eventDate: string; // Fecha en la que sucederá el evento (Boda/Sesión)
+    eventDate: string;
 
     @Column({ type: 'jsonb', nullable: true })
-    paymentSchedule: any; // Pagos diferidos [{ date: '2026-05-01', amount: 1000, isPaid: true }]
+    paymentSchedule: any;
 
     @Column()
     time: string;
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     value: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    anticipo: number;
 
     @Column({ type: 'enum', enum: ReservationStatus, default: ReservationStatus.PENDING })
     status: ReservationStatus;
