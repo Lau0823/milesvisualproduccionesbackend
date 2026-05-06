@@ -127,24 +127,38 @@ export class ServiciosController {
     @Body() updateServicioDto: UpdateServicioDto,
     @UploadedFiles() files: { file?: Express.Multer.File[], video?: Express.Multer.File[] },
   ) {
+    console.log('--- INICIO UPDATE SERVICIO ---');
+    console.log('ID recibido:', id);
+    console.log('Body recibido (Raw):', updateServicioDto);
+    console.log('Archivos recibidos:', files ? Object.keys(files) : 'Ninguno');
+
     if (files?.file?.[0]) {
+      console.log('Subiendo nueva imagen...');
       const result = await this.cloudinaryService.uploadImage(files.file[0]);
       updateServicioDto.imagen_url = result.secure_url;
+      console.log('Nueva imagen URL:', result.secure_url);
     }
     if (files?.video?.[0]) {
+      console.log('Subiendo nuevo video...');
       const result = await this.cloudinaryService.uploadVideo(files.video[0]);
       updateServicioDto.video_url = result.secure_url;
+      console.log('Nuevo video URL:', result.secure_url);
     }
 
     // Forzar conversión de booleanos si vienen como string (común en multipart/form-data)
     if (updateServicioDto.activo !== undefined) {
+      console.log('Valor activo antes:', updateServicioDto.activo, typeof updateServicioDto.activo);
       updateServicioDto.activo = String(updateServicioDto.activo) === 'true';
+      console.log('Valor activo después:', updateServicioDto.activo);
     }
     if (updateServicioDto.destacado !== undefined) {
+      console.log('Valor destacado antes:', updateServicioDto.destacado, typeof updateServicioDto.destacado);
       updateServicioDto.destacado = String(updateServicioDto.destacado) === 'true';
+      console.log('Valor destacado después:', updateServicioDto.destacado);
     }
 
-    // La conversión de números ahora la maneja bien el DTO, pero los booleanos son más delicados en updates parciales.
+    console.log('Objeto final a guardar:', updateServicioDto);
+    console.log('--- FIN UPDATE SERVICIO ---');
 
     return this.serviciosService.update(+id, updateServicioDto);
   }
