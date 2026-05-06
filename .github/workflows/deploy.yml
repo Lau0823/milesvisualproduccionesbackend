@@ -16,7 +16,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/backend
-            git pull origin main
+            # Forzamos limpieza para evitar bloqueos
+            git fetch --all
+            git reset --hard origin/main
             npm install
             npm run build
             # Usamos el archivo central de infraestructura para el despliegue
