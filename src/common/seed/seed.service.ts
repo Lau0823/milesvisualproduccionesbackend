@@ -87,18 +87,23 @@ export class SeedService {
       { key: 'instagram_url', value: 'https://instagram.com/milesvisual', description: 'Instagram' },
       { key: 'whatsapp_number', value: '573148112717', description: 'Número de WhatsApp para cotizaciones' },
 
-      // RECURSOS MULTIMEDIA (CLOUDINIARY)
-      { key: 'hero_video_url', value: 'https://res.cloudinary.com/dgfp5gcjr/video/upload/v1714290581/milesvisual/VIDEO_1_1_b0wg0m.mp4', description: 'Video principal del inicio' },
+      // RECURSOS MULTIMEDIA (CLOUDINARY)
+      { key: 'hero_video_url', value: 'https://res.cloudinary.com/dgfp5gcjr/video/upload/v1777429058/VIDEO_1_1_b0wg0m.mp4', description: 'Video principal del inicio' },
       { key: 'middle_video_url', value: 'https://res.cloudinary.com/dgfp5gcjr/video/upload/v1714290582/milesvisual/VIDEO_2.mp4', description: 'Video intermedio de la página' },
-      { key: 'about_image_1', value: 'https://res.cloudinary.com/dgfp5gcjr/image/upload/v1714290580/milesvisual/about_1.jpg', description: 'Imagen superior de Acerca de Mí' },
-      { key: 'about_image_2', value: 'https://res.cloudinary.com/dgfp5gcjr/image/upload/v1714290580/milesvisual/about_2.jpg', description: 'Imagen inferior de Acerca de Mí' },
+      { key: 'about_image_1', value: 'https://res.cloudinary.com/dgfp5gcjr/image/upload/v1777471870/WhatsApp_Image_2026-04-13_at_12.24.20_PM_1_tooe7y.jpg', description: 'Imagen superior de Acerca de Mí' },
+      { key: 'about_image_2', value: 'https://res.cloudinary.com/dgfp5gcjr/image/upload/v1777471868/WhatsApp_Image_2026-04-13_at_12.24.19_PM_qibzhs.jpg', description: 'Imagen inferior de Acerca de Mí' },
+      { key: 'about_video_url', value: 'https://res.cloudinary.com/dgfp5gcjr/video/upload/v1777429150/VIDEO_4_1_v0pinj.mp4', description: 'Video de la sección nosotros' },
       { key: 'about_title_top', value: '¿QUIÉNES', description: 'Título superior sección nosotros' },
       { key: 'about_title_bottom', value: 'SOMOS?', description: 'Título inferior (script) sección nosotros' },
     ];
 
     for (const s of settings) {
       let existing = await this.settingRepository.findOne({ where: { key: s.key } });
-      if (!existing) {
+      if (existing) {
+        // Actualizamos el valor si ya existe para asegurar que tenga la URL correcta
+        existing.value = s.value;
+        await this.settingRepository.save(existing);
+      } else {
         await this.settingRepository.save(s);
       }
     }
