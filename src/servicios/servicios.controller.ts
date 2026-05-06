@@ -145,16 +145,16 @@ export class ServiciosController {
       console.log('Nuevo video URL:', result.secure_url);
     }
 
-    // Forzar conversión de booleanos si vienen como string (común en multipart/form-data)
+    // Conversión ultra-estricta para evitar el bug de Boolean("false") === true
     if (updateServicioDto.activo !== undefined) {
-      console.log('Valor activo antes:', updateServicioDto.activo, typeof updateServicioDto.activo);
-      updateServicioDto.activo = String(updateServicioDto.activo) === 'true';
-      console.log('Valor activo después:', updateServicioDto.activo);
+      console.log('Validando ACTIVO. Recibido:', updateServicioDto.activo);
+      updateServicioDto.activo = (updateServicioDto.activo === 'true' || updateServicioDto.activo === true);
+      console.log('Resultado ACTIVO:', updateServicioDto.activo);
     }
     if (updateServicioDto.destacado !== undefined) {
-      console.log('Valor destacado antes:', updateServicioDto.destacado, typeof updateServicioDto.destacado);
-      updateServicioDto.destacado = String(updateServicioDto.destacado) === 'true';
-      console.log('Valor destacado después:', updateServicioDto.destacado);
+      console.log('Validando DESTACADO. Recibido:', updateServicioDto.destacado);
+      updateServicioDto.destacado = (updateServicioDto.destacado === 'true' || updateServicioDto.destacado === true);
+      console.log('Resultado DESTACADO:', updateServicioDto.destacado);
     }
 
     console.log('Objeto final a guardar:', updateServicioDto);

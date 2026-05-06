@@ -7,12 +7,10 @@ export class UpdateServicioDto extends PartialType(CreateServicioDto) {
   @ApiProperty({ required: false })
   @IsOptional()
   @Transform(({ value }) => value === 'true' || value === true || value === '1' || value === 1)
-  @IsBoolean()
-  activo?: boolean;
+  activo?: any;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @Transform(({ value }) => value === 'true' || value === true || value === '1' || value === 1)
-  @IsBoolean()
-  destacado?: boolean;
+  destacado?: any;
 }
