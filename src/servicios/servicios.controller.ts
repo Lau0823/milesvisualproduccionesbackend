@@ -127,38 +127,22 @@ export class ServiciosController {
     @Body() updateServicioDto: UpdateServicioDto,
     @UploadedFiles() files: { file?: Express.Multer.File[], video?: Express.Multer.File[] },
   ) {
-    console.log('--- INICIO UPDATE SERVICIO ---');
-    console.log('ID recibido:', id);
-    console.log('Body recibido (Raw):', updateServicioDto);
-    console.log('Archivos recibidos:', files ? Object.keys(files) : 'Ninguno');
-
     if (files?.file?.[0]) {
-      console.log('Subiendo nueva imagen...');
       const result = await this.cloudinaryService.uploadImage(files.file[0]);
       updateServicioDto.imagen_url = result.secure_url;
-      console.log('Nueva imagen URL:', result.secure_url);
     }
     if (files?.video?.[0]) {
-      console.log('Subiendo nuevo video...');
       const result = await this.cloudinaryService.uploadVideo(files.video[0]);
       updateServicioDto.video_url = result.secure_url;
-      console.log('Nuevo video URL:', result.secure_url);
     }
 
     // Conversión ultra-estricta para evitar el bug de Boolean("false") === true
     if (updateServicioDto.activo !== undefined) {
-      console.log('Validando ACTIVO. Recibido:', updateServicioDto.activo);
       updateServicioDto.activo = (updateServicioDto.activo === 'true' || updateServicioDto.activo === true);
-      console.log('Resultado ACTIVO:', updateServicioDto.activo);
     }
     if (updateServicioDto.destacado !== undefined) {
-      console.log('Validando DESTACADO. Recibido:', updateServicioDto.destacado);
       updateServicioDto.destacado = (updateServicioDto.destacado === 'true' || updateServicioDto.destacado === true);
-      console.log('Resultado DESTACADO:', updateServicioDto.destacado);
     }
-
-    console.log('Objeto final a guardar:', updateServicioDto);
-    console.log('--- FIN UPDATE SERVICIO ---');
 
     return this.serviciosService.update(+id, updateServicioDto);
   }
