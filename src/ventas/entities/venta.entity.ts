@@ -1,5 +1,4 @@
-// src/ventas/entities/venta.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany, Index } from 'typeorm';
 import { Cliente } from '../../clientes/entities/cliente.entity';
 import { User } from '../../users/entities/user.entity';
 import { VentaServicio } from './venta-servicio.entity';
@@ -10,6 +9,7 @@ export class Venta {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @Column({ type: 'timestamp' })
   fecha: Date;
 
@@ -19,10 +19,12 @@ export class Venta {
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
+  @Index()
   @ManyToOne(() => Cliente, cliente => cliente.ventas)
   @JoinColumn({ name: 'cliente_id' }) 
   cliente: Cliente;
 
+  @Index()
   @ManyToOne(() => User, user => user.ventas)
   @JoinColumn({ name: 'usuario_id' })
   usuario: User;

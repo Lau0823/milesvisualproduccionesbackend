@@ -64,8 +64,37 @@ export class CitasService {
         return this.citaRepository.save(cita);
     }
 
-    async findAll() {
-        return this.citaRepository.find({ relations: ['empleado', 'cliente', 'servicio'] });
+    async findAll(
+        startDate?: string,
+        endDate?: string,
+        page: number = 1,
+        limit: number = 100,
+    ) {
+        const skip = (page - 1) * limit;
+        const where: any = {};
+
+        if (startDate && endDate) {
+            where.fecha_inicio = Between(new Date(startDate), new Date(endDate + 'T23:59:59.999'));
+        } else if (startDate) {
+            where.fecha_inicio = MoreThanOrEqual(new Date(startDate));
+        } else if (endDate) {
+            where.fecha_inicio = LessThanOrEqual(new Date(endDate + 'T23:59:59.999'));
+        }
+
+        const [result, total] = await this.citaRepository.findAndCount({
+            where,
+            relations: ['empleado', 'cliente', 'servicio'],
+            order: { fecha_inicio: 'ASC' },
+            take: limit,
+            skip: skip,
+        });
+
+        return {
+            data: result,
+            total,
+            page,
+            lastPage: Math.ceil(total / limit),
+        };
     }
 
     async findOne(id: number) {

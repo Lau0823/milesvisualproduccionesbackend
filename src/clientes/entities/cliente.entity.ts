@@ -1,5 +1,4 @@
-// src/clientes/entities/cliente.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne, Index } from 'typeorm';
 import { Venta } from '../../ventas/entities/venta.entity';
 import { User } from '../../users/entities/user.entity'; 
 @Entity('clientes')
@@ -16,6 +15,7 @@ export class Cliente {
   @Column({ length: 20, nullable: true })
   telefono: string;
 
+  @Index()
   @Column({ length: 255, nullable: true })
   correo: string;
 

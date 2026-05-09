@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Cliente } from '../../clientes/entities/cliente.entity';
 import { Servicio } from '../../servicios/entities/servicio.entity';
@@ -15,12 +15,14 @@ export class Cita {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Index()
     @Column({ type: 'timestamp' })
     fecha_inicio: Date;
 
     @Column({ type: 'timestamp' })
     fecha_fin: Date;
 
+    @Index()
     @Column({ type: 'enum', enum: EstadoCita, default: EstadoCita.PENDIENTE })
     estado: EstadoCita;
 
@@ -37,6 +39,7 @@ export class Cita {
     @JoinColumn({ name: 'empleado_id' })
     empleado: User;
 
+    @Index()
     @Column()
     empleado_id: number;
 
@@ -44,6 +47,7 @@ export class Cita {
     @JoinColumn({ name: 'cliente_id' })
     cliente: Cliente;
 
+    @Index()
     @Column()
     cliente_id: number;
 

@@ -1,5 +1,5 @@
-// src/auth/auth.controller.ts
 import { Controller, Post, Body, HttpCode, HttpStatus, Res, Get, Req, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -23,6 +23,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public() 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Inicia sesión de un usuario con nombre de usuario y contraseña (Ruta pública)' })

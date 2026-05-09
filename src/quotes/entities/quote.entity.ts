@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 export enum QuoteStatus {
     NEW = 'new',
@@ -15,6 +15,7 @@ export class QuoteRequest {
     @Column({ nullable: true })
     clientName: string;
 
+    @Index()
     @Column({ nullable: true })
     email: string;
 
@@ -37,9 +38,11 @@ export class QuoteRequest {
     @Column({ nullable: true })
     sourceUrl: string; // Desde qué página de la web vino
 
+    @Index()
     @Column({ type: 'enum', enum: QuoteStatus, default: QuoteStatus.NEW })
     status: QuoteStatus;
 
+    @Index()
     @CreateDateColumn()
     createdAt: Date;
 

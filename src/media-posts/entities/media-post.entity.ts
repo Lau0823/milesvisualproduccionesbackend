@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 export enum PostStatus {
     DRAFT = 'draft',
@@ -13,6 +13,7 @@ export class MediaPost {
     @Column()
     title: string;
 
+    @Index()
     @Column()
     category: string;
 
@@ -22,9 +23,11 @@ export class MediaPost {
     @Column()
     cloudinaryPublicId: string;
 
+    @Index()
     @Column({ type: 'enum', enum: PostStatus, default: PostStatus.PUBLISHED })
     status: PostStatus;
 
+    @Index()
     @CreateDateColumn()
     createdAt: Date;
 
