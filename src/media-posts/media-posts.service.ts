@@ -12,7 +12,7 @@ export class MediaPostsService {
     private readonly cloudinaryService: CloudinaryService
   ) {}
 
-  async create(createMediaPostDto: any, file?: Express.Multer.File) {
+  async create(createMediaPostDto: any, file?: Express.Multer.File): Promise<MediaPost> {
     let cloudinaryUrl = createMediaPostDto.cloudinaryUrl || '';
     let cloudinaryPublicId = createMediaPostDto.cloudinaryPublicId || '';
 
@@ -31,18 +31,18 @@ export class MediaPostsService {
       ...createMediaPostDto,
       cloudinaryUrl,
       cloudinaryPublicId
-    });
+    } as any) as unknown as MediaPost;
 
     return await this.mediaPostRepository.save(post);
   }
 
-  async findAll() {
+  async findAll(): Promise<MediaPost[]> {
     return await this.mediaPostRepository.find({
       order: { createdAt: 'DESC' },
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<MediaPost> {
     const post = await this.mediaPostRepository.findOneBy({ id });
     if (!post) {
       throw new NotFoundException(`MediaPost with ID ${id} not found`);
@@ -50,8 +50,8 @@ export class MediaPostsService {
     return post;
   }
 
-  async update(id: number, updateMediaPostDto: any, file?: Express.Multer.File) {
-    const post = await this.findOne(id);
+  async update(id: number, updateMediaPostDto: any, file?: Express.Multer.File): Promise<MediaPost> {
+    const post: MediaPost = await this.findOne(id);
 
     if (file) {
       const isVideo = file.mimetype.includes('video');
