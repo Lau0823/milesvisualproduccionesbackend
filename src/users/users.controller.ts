@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../common/enums/role.enum'; 
@@ -34,6 +35,14 @@ export class UsersController {
   updateProfile(@Req() req: RequestWithUser, @Body() updateUserDto: UpdateUserDto) {
     // Forzar que solo se actualice el ID del usuario logueado
     return this.usersService.update(req.user.id, updateUserDto);
+  }
+
+  @Post('profile/change-password')
+  @ApiOperation({ summary: 'Cambia la contraseña del usuario autenticado' })
+  @ApiResponse({ status: 200, description: 'Contraseña actualizada exitosamente.' })
+  @ApiResponse({ status: 400, description: 'Contraseña actual incorrecta o datos inválidos.' })
+  changePassword(@Req() req: RequestWithUser, @Body() changePasswordDto: ChangePasswordDto) {
+    return this.usersService.changePassword(req.user.id, changePasswordDto);
   }
 
   @Post()

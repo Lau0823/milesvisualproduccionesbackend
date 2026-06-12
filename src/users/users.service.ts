@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
@@ -127,6 +128,24 @@ export class UsersService implements OnModuleInit {
     const updatedUser = await this.usersRepository.save(user);
     const { password_hash: _, ...result } = updatedUser;
     return result;
+  }
+
+  async changePassword(id: number, changePasswordDto: ChangePasswordDto): Promise<{ message: string }> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado.`);
+    }
+
+    const isPasswordValid = await bcrypt.compare(changePasswordDto.oldPassword, user.password_hash);
+    if (!isPasswordValid) {
+      throw new BadRequestException('La contraseña actual es incorrecta.');
+    }
+
+    const salt = await bcrypt.genSalt();
+    user.password_hash = await bcrypt.hash(changePasswordDto.newPassword, salt);
+    await this.usersRepository.save(user);
+
+    return { message: 'Contraseña actualizada exitosamente' };
   }
 
   async remove(id: number): Promise<void> {
