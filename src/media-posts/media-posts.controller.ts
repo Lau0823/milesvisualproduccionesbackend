@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Header, ParseFilePipeBuilder, HttpStatus } from '@nestjs/common';
 import { MediaPostsService } from './media-posts.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from '../auth/decorators/public.decorator';
@@ -16,7 +16,14 @@ export class MediaPostsController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Crea un nuevo post de media (Requiere Auth)' })
-  create(@Body() createMediaPostDto: any, @UploadedFile() file: Express.Multer.File) {
+  create(
+    @Body() createMediaPostDto: any, 
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({ maxSize: 10485760, message: 'El archivo supera el límite de 10 MB' })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY, fileIsRequired: false }),
+    ) file: Express.Multer.File
+  ) {
     return this.mediaPostsService.create(createMediaPostDto, file);
   }
 
@@ -40,7 +47,15 @@ export class MediaPostsController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Actualiza un post de media (Requiere Auth)' })
-  update(@Param('id') id: string, @Body() updateMediaPostDto: any, @UploadedFile() file: Express.Multer.File) {
+  update(
+    @Param('id') id: string, 
+    @Body() updateMediaPostDto: any, 
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({ maxSize: 10485760, message: 'El archivo supera el límite de 10 MB' })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY, fileIsRequired: false }),
+    ) file: Express.Multer.File
+  ) {
     return this.mediaPostsService.update(+id, updateMediaPostDto, file);
   }
 

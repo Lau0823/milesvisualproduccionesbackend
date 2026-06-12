@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, UseInterceptors, UploadedFile, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, UseInterceptors, UploadedFile, Header, ParseFilePipeBuilder, HttpStatus } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SettingsService } from './settings.service';
 import { Public } from '../auth/decorators/public.decorator';
@@ -47,7 +47,11 @@ export class SettingsController {
   @ApiOperation({ summary: 'Sube un archivo (imagen o video) para un ajuste específico (Requiere Auth)' })
   uploadFile(
     @Param('key') key: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({ maxSize: 10485760, message: 'El archivo supera el límite de 10 MB' })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
+    ) file: Express.Multer.File,
   ) {
     return this.settingsService.uploadFile(key, file);
   }
