@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseGuards, Req, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -43,6 +44,20 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Contraseña actual incorrecta o datos inválidos.' })
   changePassword(@Req() req: RequestWithUser, @Body() changePasswordDto: ChangePasswordDto) {
     return this.usersService.changePassword(req.user.id, changePasswordDto);
+  }
+
+  @Post('profile/upload-avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Sube una foto de perfil para el usuario autenticado' })
+  uploadAvatar(
+    @Req() req: RequestWithUser,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({ maxSize: 5242880, message: 'El archivo supera el límite de 5 MB' })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
+    ) file: Express.Multer.File,
+  ) {
+    return this.usersService.uploadAvatar(req.user.id, file);
   }
 
   @Post()

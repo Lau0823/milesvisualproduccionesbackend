@@ -6,12 +6,14 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async onModuleInit() {
@@ -146,6 +148,19 @@ export class UsersService implements OnModuleInit {
     await this.usersRepository.save(user);
 
     return { message: 'Contraseña actualizada exitosamente' };
+  }
+
+  async uploadAvatar(id: number, file: Express.Multer.File): Promise<{ foto_perfil_url: string }> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado.`);
+    }
+
+    const uploadResult = await this.cloudinaryService.uploadImage(file);
+    user.foto_perfil_url = uploadResult.secure_url;
+    await this.usersRepository.save(user);
+
+    return { foto_perfil_url: uploadResult.secure_url };
   }
 
   async remove(id: number): Promise<void> {
